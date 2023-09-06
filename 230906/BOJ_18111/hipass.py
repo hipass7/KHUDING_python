@@ -19,17 +19,11 @@ for block in range(257):
                 cnt += (j - block) * 2
                 B += (j - block)
             else:
-                if B >= (block - j):
-                    cnt += (block - j)
-                    B -= (block - j)
-                else:
-                    escape = True
-                    break
-        if escape:
-            break
-    if escape:
+                cnt += (block - j)
+                B -= (block - j)
+
+    if B < 0:
         continue
-    
     if cnt <= res_min:
         res_min = cnt
         idx = block
