@@ -10,11 +10,14 @@ def sinkLand(current_map, R, C):
                 count = 0
                 for k in range(len(dx)):
                     nx, ny = i + dx[k], j + dy[k]
-                    try:
-                        if current_map[nx][ny] == '.': 
-                            count += 1
-                    except:
+                    if nx < 0 or ny < 0:
                         count += 1
+                    else:
+                        try:
+                            if current_map[nx][ny] == '.': 
+                                count += 1
+                        except:
+                            count += 1
                 if count >= 3:
                     new_map[i][j] = '.'
                 else:
