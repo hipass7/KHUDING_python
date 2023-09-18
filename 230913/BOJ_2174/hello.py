@@ -2,7 +2,6 @@
 A, B = map(int, input().split())
 
 N, M = map(int, input().split())
-
 robots = [[-1, -1, "X"] for _ in range(N)] # 초기지점 및 바라보는 방향
 commands = [[-1, "X", -1] for _ in range(M)] # 로봇번호, 움직이는 것, 반복횟수
 
@@ -32,24 +31,29 @@ for c in commands:
     for _ in range(c[2]): # 반복횟수
         if c[1] == "L": 
             robot[2] = directions[(ind - 1) % 4]
+            # print(robot_num, robot[2])
 
         elif c[1] == "R":
             robot[2] = directions[(ind + 1) % 4]
+            # print(robot_num, robot[2])
 
         else:
-            nx, ny = robot[0] + dx[ind], robot[1] + dy[ind]
+            x, y, d = robot
+            nx, ny = x + dx[ind], y + dy[ind]
             if nx < 1 or ny < 1 or nx > A or ny > B:
+                # print(robot_num, nx, ny)
                 print(f"Robot {robot_num} crashes into the wall")
                 crash = True
                 break
-            for i in range(len(robots)):
-                if i != robot_num - 1 and robots[i][0] == nx and robots[i][1] == ny:
-                    print(f"Robot {robot_num} crashes into robot {i + 1}")
-                    crash = True
-                    break
-            if crash:
+            new_list = [[robot[0], robot[1]] for robot in robots]
+            if [nx, ny] in new_list:
+                index = new_list.index([nx, ny])
+                # print(robot_num, nx, ny)
+                print(f"Robot {robot_num} crashes into robot {index+1}")
+                crash = True
                 break
             robot[0], robot[1] = nx, ny
+            # print(robot_num, nx, ny)
     if crash:
         break
 if not crash:
