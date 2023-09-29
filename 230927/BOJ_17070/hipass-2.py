@@ -1,103 +1,24 @@
 # 파이프 옮기기
-from collections import deque
 
 n = int(input())
 
 graph = [list(map(int, input().split())) for _ in range(n)]
 
-def rkfh(x, y):
-    nx = x
-    ny = y + 1
-    try:
-        if graph[nx][ny] == 1:
-            pass
-        else:
-            graph[nx][ny] -= 1
-            queue.append((nx, ny, 0))
-    except:
-        pass
+dp = [[[0 for i in range(n)] for i in range(n)] for i in range(3)]
 
-    nx += 1
-    try:
-        if graph[nx][ny] == 1 or graph[nx][ny-1] == 1 or graph[nx-1][ny] == 1:
-            pass
-        else:
-            graph[nx][ny] -= 1
-            queue.append((nx, ny, 2))
-    except:
-        pass
+dp[0][0][1] = 1
+for i in range(2, n):
+    if graph[0][i] != 1:
+        dp[0][0][i] = dp[0][0][i-1]
 
-def tpfh(x, y):
-    nx = x + 1
-    ny = y
-    try:
-        if graph[nx][ny] == 1:
-            pass
-        else:
-            graph[nx][ny] -= 1
-            queue.append((nx, ny, 1))
-    except:
-        pass
+for i in range(1, n):
+    for j in range(1, n):
+        if graph[i][j] != 1 and graph[i-1][j] != 1 and graph[i][j-1] != 1:
+            dp[2][i][j] = dp[2][i-1][j-1] + dp[0][i-1][j-1] + dp[1][i-1][j-1]
 
-    ny += 1
-    try:
-        if graph[nx][ny] == 1 or graph[nx-1][ny] == 1 or graph[nx][ny-1] == 1:
-            pass
-        else:
-            graph[nx][ny] -= 1
-            queue.append((nx, ny, 2))
-    except:
-        pass
+        if graph[i][j] != 1:
+            dp[0][i][j] = dp[2][i][j-1] + dp[0][i][j-1]
+            dp[1][i][j] = dp[2][i-1][j] + dp[1][i-1][j]
 
-def eorkrtjs(x, y):
-    nx = x
-    ny = y + 1
-    try:
-        if graph[nx][ny] == 1:
-            pass
-        else:
-            graph[nx][ny] -= 1
-            queue.append((nx, ny, 0))
-    except:
-        pass
+print(sum(dp[i][n-1][n-1] for i in range(3)))
 
-    nx += 1
-    ny -= 1
-    try:
-        if graph[nx][ny] == 1:
-            pass
-        else:
-            graph[nx][ny] -= 1
-            queue.append((nx, ny, 1))
-    except:
-        pass
-
-    ny += 1
-    try:
-        if graph[nx][ny] == 1 or graph[nx-1][ny] == 1 or graph[nx][ny-1] == 1:
-            pass
-        else:
-            graph[nx][ny] -= 1
-            queue.append((nx, ny, 2))
-    except:
-        pass
-
-queue = deque([(0, 1, 0)])
-
-while queue:
-    x, y, d = queue.popleft()
-    if d == 0:
-        rkfh(x, y)
-    elif d == 1:
-        tpfh(x, y)
-    else:
-        eorkrtjs(x, y)
-
-
-result = -graph[n-1][n-1]
-if result > 0:
-    print(result)
-else:
-    print(0)
-
-# 완전 탐색으로 풀이 시 python 특성 상 시간초과
